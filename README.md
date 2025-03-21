@@ -1,3 +1,70 @@
+# File Storage App with Supabase
+
+This application allows users to upload multiple files to a folder. The folder is created in a PostgreSQL database (via Supabase), and the files are uploaded to Supabase Storage with links to the folder.
+
+## Setup
+
+### 1. Supabase Setup
+
+1. Create a Supabase account at [supabase.com](https://supabase.com)
+2. Create a new project
+3. Get your Supabase URL and anon key from the project settings (API section)
+4. Set up the database tables by running the SQL in `supabase/migrations/20231001000000_create_tables.sql` in the Supabase SQL Editor
+5. Create a storage bucket named "files" in the Supabase Storage section
+
+### 2. Environment Variables
+
+Update the `.env.local` file with your Supabase credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Run the Development Server
+
+```bash
+npm run dev
+```
+
+## Database Schema
+
+The application uses two main tables:
+
+### `folders` Table
+
+- `id`: UUID (primary key)
+- `name`: Text (folder name)
+- `created_at`: Timestamp
+- `updated_at`: Timestamp
+
+### `files` Table
+
+- `id`: UUID (primary key)
+- `folder_id`: UUID (foreign key to folders.id)
+- `name`: Text (original file name)
+- `size`: BigInt (file size in bytes)
+- `type`: Text (file MIME type)
+- `path`: Text (path in Supabase Storage)
+- `created_at`: Timestamp
+- `updated_at`: Timestamp
+
+## How It Works
+
+1. User enters a folder name and selects multiple files
+2. On submission:
+   - A new folder record is created in the database
+   - Each file is uploaded to Supabase Storage in a path based on the folder ID
+   - For each file, a file record is created in the database linking to the folder
+3. Progress is shown during upload
+4. Success message is displayed upon completion with folder ID and file list
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
