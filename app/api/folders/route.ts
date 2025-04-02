@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import supabaseServer from '../../../lib/supabase-server';
+import { supabaseAdmin } from '../../../lib/supabase';
 import { Folder } from '../../../lib/types';
 
 export async function GET() {
   try {
     // Get all folders
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabaseAdmin
       .from('folders')
       .select('*')
       .order('created_at', { ascending: false });
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       created_at: new Date().toISOString(),
     };
     
-    const { error } = await supabaseServer.from('folders').insert([folder]);
+    const { error } = await supabaseAdmin.from('folders').insert([folder]);
     
     if (error) {
       console.error('Error creating folder:', error);

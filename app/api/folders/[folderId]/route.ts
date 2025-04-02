@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabaseServer from '../../../../lib/supabase-server';
+import { supabaseAdmin } from '../../../../lib/supabase';
 
 export async function GET(
   request: Request,
@@ -16,7 +16,7 @@ export async function GET(
     }
 
     // Get folder details
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabaseAdmin
       .from('folders')
       .select('*')
       .eq('id', folderId)
@@ -38,7 +38,7 @@ export async function GET(
     }
 
     // Get file count for this folder
-    const { count, error: countError } = await supabaseServer
+    const { count, error: countError } = await supabaseAdmin
       .from('files')
       .select('*', { count: 'exact', head: true })
       .eq('folder_id', folderId);

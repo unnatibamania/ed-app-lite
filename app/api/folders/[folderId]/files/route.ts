@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabaseServer from '../../../../../lib/supabase-server';
+import { supabaseAdmin } from '../../../../../lib/supabase';
 import { FileRecord } from '../../../../../lib/types';
 
 export async function GET(
@@ -17,7 +17,7 @@ export async function GET(
     }
 
     // Get files for the specified folder
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabaseAdmin
       .from('files')
       .select('*')
       .eq('folder_id', folderId)
@@ -34,7 +34,7 @@ export async function GET(
     // For each file, generate a URL
     const filesWithUrls = await Promise.all(
       data.map(async (file: FileRecord) => {
-        const { data: urlData } = await supabaseServer.storage
+        const { data: urlData } = await supabaseAdmin.storage
           .from('sheep')
           .createSignedUrl(file.path, 3600); // 1 hour expiry
 

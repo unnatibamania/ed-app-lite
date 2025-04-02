@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import supabaseServer from '../../../lib/supabase-server';
+import { supabaseAdmin } from '../../../lib/supabase';
 import { FileRecord } from '../../../lib/types';
 
 export async function POST(request: Request) {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       const filePath = `${folderId}/${fileId}.${fileExt}`;
 
       // Upload to Supabase Storage
-      const { error: uploadError } = await supabaseServer.storage
+      const { error: uploadError } = await supabaseAdmin.storage
         .from('sheep')
         .upload(filePath, file);
 
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     }
 
     // Insert all file records in a single operation
-    const { error: fileRecordError } = await supabaseServer
+    const { error: fileRecordError } = await supabaseAdmin
       .from('files')
       .insert(fileRecords);
 
